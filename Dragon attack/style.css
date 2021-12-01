@@ -13,10 +13,7 @@ table {
   text-align: center;
 }
 table td {
-  /* structure */
   padding: 7px 10px;
-
-  /* presentation */
   border: 1px dashed white;
   text-align: center;
 }

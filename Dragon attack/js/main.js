@@ -1,4 +1,4 @@
-"use strict"; // Mode strict du JavaScript
+"use strict";
 
 /*************************************************************************************************/
 /* **************************************** DONNEES JEU **************************************** */
@@ -6,10 +6,8 @@
 
 const DIV = document.querySelector("#game");
 
-// L'unique variable globale est un objet contenant l'état du jeu.
 let game;
 
-// Déclaration des constantes du jeu, rend le code plus compréhensible.
 const ARMOR_COPPER = 1;
 const ARMOR_IRON = 2;
 const ARMOR_MAGICAL = 3;
@@ -30,20 +28,15 @@ function computeDragonDamagePoint() {
   let damagePoint;
 
   if (game.difficulty == LEVEL_EASY) {
-    // Le dragon inflige moins de dégâts si le niveau de difficulté est facile.
     damagePoint = getRandomInteger(10, 20);
   } else {
     damagePoint = getRandomInteger(30, 40);
   }
-
-  // Calcul du résultat final en fonction de l'armure du joueur.
   return Math.round(damagePoint / game.armorRatio);
 }
 
 function computePlayerDamagePoint() {
   let damagePoint;
-
-  // Les dégâts infligés par le joueur varient selon la difficulté du jeu.
   switch (game.difficulty) {
     case LEVEL_EASY:
       damagePoint = getRandomInteger(25, 30);
@@ -57,8 +50,6 @@ function computePlayerDamagePoint() {
       damagePoint = getRandomInteger(5, 10);
       break;
   }
-
-  // Calcul du résultat final en fonction de l'épée du joueur.
   return Math.round(damagePoint * game.swordRatio);
 }
 
@@ -67,44 +58,34 @@ function gameLoop() {
   let dragonSpeed;
   let playerSpeed;
 
-  // Le jeu s'exécute tant que le dragon et le joueur sont vivants.
   while (game.hpDragon > 0 && game.hpPlayer > 0) {
     DIV.innerHTML += `<h3>----- Tour n°${game.round} -----</h3>`;
 
-    // Détermination de la vitesse du dragon et du joueur.
     dragonSpeed = getRandomInteger(10, 20);
     playerSpeed = getRandomInteger(10, 20);
 
-    // Est-ce que le dragon est plus rapide que le joueur ?
     if (dragonSpeed > playerSpeed) {
-      // Oui, le joueur se prend des dégâts et perd des points de vie.
       damagePoint = computeDragonDamagePoint();
 
-      // Diminution des points de vie du joueur.
       game.hpPlayer -= damagePoint;
-      // Identique à game.hpPlayer = game.hpPlayer - damagePoint;
 
       DIV.innerHTML += `<p>Le dragon est plus rapide et vous brûle, il vous enlève ${damagePoint} PV</p>`;
     } else {
-      // Non, le dragon se prend des dégâts et perd des points de vie.
+
       damagePoint = computePlayerDamagePoint();
 
-      // Diminution des points de vie du dragon.
       game.hpDragon -= damagePoint;
-      // Identique à game.hpDragon = game.hpDragon - damagePoint;
 
       DIV.innerHTML += `<p>Vous êtes plus rapide et frappez le dragon, vous lui enlevez ${damagePoint} PV</p>`;
     }
 
     showGameState();
 
-    // On passe au tour suivant.
     game.round++;
   }
 }
 
 function initializeGame() {
-  // Initialisation de la variable globale du jeu.
   game = new Object();
   game.round = 1;
 
@@ -114,10 +95,6 @@ function initializeGame() {
     3
   );
 
-  /*
-   * Détermination des points de vie de départ du joueur et du dragon selon
-   * le niveau de difficulté.
-   */
   switch (game.difficulty) {
     case LEVEL_EASY:
       game.hpDragon = getRandomInteger(150, 200);
@@ -148,34 +125,28 @@ function initializeGame() {
   );
 
   switch (game.armor) {
-    // Une armure en cuivre protège normalement.
     case ARMOR_COPPER:
       game.armorRatio = 1;
       break;
 
-    // Une armure en fer diminue un peu les dégâts infligés.
     case ARMOR_IRON:
       game.armorRatio = 1.25;
       break;
 
-    // Une armure magique divise par deux les dégâts infligés.
     case ARMOR_MAGICAL:
       game.armorRatio = 2;
       break;
   }
 
   switch (game.sword) {
-    // Une épée en bois nécessite deux fois plus de dégâts que la normale.
     case SWORD_WOOD:
       game.swordRatio = 0.5;
       break;
 
-    // Une épée en acier inflige des dégâts normaux.
     case SWORD_STEEL:
       game.swordRatio = 1;
       break;
 
-    // L'épée légendaire inflige le double de dégâts.
     case SWORD_EXCALIBUR:
       game.swordRatio = 2;
       break;
@@ -212,7 +183,7 @@ function showGameWinner() {
       <h4>Vous avez gagné, vous êtes vraiment fort !</h4>
       <p>Il vous restait ${game.hpPlayer} PV.</p>
     `;
-  } // if(game.hpPlayer <= 0)
+  }
   else {
     ARTICLE.innerHTML += `<img src='img/dragon.png'>
       <h4>Le dragon a gagné, vous avez été carbonisé !</h4>
@@ -222,15 +193,12 @@ function showGameWinner() {
 }
 
 function startGame() {
-  // Initialisation du jeu.
   initializeGame();
 
-  // Exécution du jeu.
   DIV.innerHTML = "<h3>Points de vie de départ</h3>";
   showGameState();
   gameLoop();
-
-  // Fin du jeu.
+  
   showGameWinner();
 }
 
